@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 module.exports = {
   getAll,
   newEmail,
+  deleteEmail,
 };
 
 async function getAll(req, res) {
@@ -13,12 +14,12 @@ async function getAll(req, res) {
     return res.json(emails);
   } catch (error) {
     //send error
-    res.status(500).json(error);
+    res.status(500).json(error.message);
   }
 }
 
 async function newEmail(req, res) {
-  console.log(req.body)
+  console.log(req.body);
   try {
     const email = await prisma.email.create({
       data: {
@@ -31,6 +32,21 @@ async function newEmail(req, res) {
     return res.json(email);
   } catch (error) {
     //send error
-    res.status(500).json(error);
+    res.status(500).json(error.message);
+  }
+}
+
+async function deleteEmail(req, res) {
+  const id = parseInt(req.params.id);
+  try {
+    const email = await prisma.email.delete({
+      where: {
+        id: id,
+      },
+    });
+    return res.json(email);
+  } catch (error) {
+    //send error
+    res.status(500).json(error.message);
   }
 }
